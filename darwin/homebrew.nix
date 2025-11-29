@@ -24,6 +24,8 @@
       "iina"
 
       "telegram"
+
+      "pearcleaner"
     ];
     taps = [ ];
   };
