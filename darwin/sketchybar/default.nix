@@ -9,6 +9,7 @@ let
 
   defaults = import ./defaults.nix;
   mkSketchybarConfig = pkgs.callPackage ./package.nix { };
+  sketchybarLuaModule = pkgs.callPackage ./sbar-lua.nix { };
   cfg = config.hazed.sketchybar;
 
   hexType = types.strMatching "0x[0-9a-fA-F]+";
@@ -43,8 +44,14 @@ in {
           magenta = colorOption defaults.colors.magenta;
           grey = colorOption defaults.colors.grey;
           transparent = colorOption defaults.colors.transparent;
-          bar = nestedColorOption defaults.colors.bar;
-          popup = nestedColorOption defaults.colors.popup;
+          bar = mkOption {
+            type = nestedColorOption defaults.colors.bar;
+            default = defaults.colors.bar;
+          };
+          popup = mkOption {
+            type = nestedColorOption defaults.colors.popup;
+            default = defaults.colors.popup;
+          };
           bg1 = colorOption defaults.colors.bg1;
           bg2 = colorOption defaults.colors.bg2;
         };
@@ -104,6 +111,20 @@ in {
         theme = cfg.theme;
         spacesCount = cfg.spaces.count;
       };
+      sketchybarLauncher = pkgs.writeShellApplication {
+        name = "sketchybar-launcher";
+        text = ''
+          set -euo pipefail
+
+          lock_file="/tmp/sketchybar_''${USER:-unknown}.lock"
+          if [ -e "$lock_file" ]; then
+            rm -f "$lock_file"
+          fi
+
+          exec ${config.services.sketchybar.package}/bin/sketchybar \
+            --config ${sketchybarConfig}/sketchybarrc "$@"
+        '';
+      };
     in {
       services.sketchybar = {
         enable = true;
@@ -112,13 +133,12 @@ in {
 
       launchd.user.agents.sketchybar.serviceConfig = {
         ProgramArguments = lib.mkForce [
-          "${config.services.sketchybar.package}/bin/sketchybar"
-          "--config"
-          "${sketchybarConfig}/sketchybarrc"
+          "${sketchybarLauncher}/bin/sketchybar-launcher"
         ];
         EnvironmentVariables = lib.mkForce {
           CONFIG_DIR = "${sketchybarConfig}";
           LUA_PATH = "${sketchybarConfig}/?.lua;${sketchybarConfig}/?/init.lua;;";
+          SKETCHYBAR_LUA_PATH = "${sketchybarLuaModule}/lib/sketchybar/?.so";
         };
       };
 

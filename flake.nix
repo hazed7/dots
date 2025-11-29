@@ -32,9 +32,27 @@
         allowUnsupportedSystem = false;
       };
 
+      pkgs = import nixpkgs {
+        inherit system;
+        config = nixpkgsConfig;
+      };
+
       unstable = import inputs.nixpkgs-unstable { inherit system; };
+      sketchybarDefaults = import ./darwin/sketchybar/defaults.nix;
+      mkSketchybarConfig = pkgs.callPackage ./darwin/sketchybar/package.nix { };
+      mkSbarLua = pkgs.callPackage ./darwin/sketchybar/sbar-lua.nix { };
     in {
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
+      formatter.${system} = pkgs.nixfmt;
+
+      packages.${system} = {
+        sketchybar-config = mkSketchybarConfig {
+          src = ./darwin/sketchybar/src;
+          colors = sketchybarDefaults.colors;
+          theme = sketchybarDefaults.theme;
+          spacesCount = sketchybarDefaults.spaces.count;
+        };
+        sketchybar-lua = mkSbarLua;
+      };
 
       darwinConfigurations.${hostname} = darwin.lib.darwinSystem {
         inherit system;

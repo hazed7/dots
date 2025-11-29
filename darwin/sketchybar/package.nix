@@ -1,4 +1,4 @@
-{ lib, stdenv, gnumake, clang }:
+{ lib, stdenv, gnumake, clang, lua5_4 }:
 { src
 , colors
 , theme
@@ -33,7 +33,7 @@ stdenv.mkDerivation {
   pname = "sketchybar-config";
   version = "1.0.0";
   inherit src;
-  nativeBuildInputs = [ gnumake clang ];
+  nativeBuildInputs = [ gnumake clang lua5_4 ];
   dontConfigure = true;
 
   postPatch = ''
@@ -63,6 +63,7 @@ stdenv.mkDerivation {
     runHook preInstall
     cp -R . $out
     chmod +x $out/sketchybarrc
+    patchShebangs $out/sketchybarrc
     runHook postInstall
   '';
 }
