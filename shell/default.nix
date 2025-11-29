@@ -14,7 +14,7 @@
       bind nmap inetutils
 
       # core
-      openssl wget curl fd ripgrep eza
+      openssl gnupg wget curl fd ripgrep eza
       nushell
 
       grc gh

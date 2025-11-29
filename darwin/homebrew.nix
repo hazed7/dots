@@ -17,6 +17,7 @@
       "zed"
 
       "ghostty"
+      "siyuan"
 
       # other
       "keka"

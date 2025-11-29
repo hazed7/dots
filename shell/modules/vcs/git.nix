@@ -27,6 +27,7 @@
         email = "iheartapplejr@gmail.com";
         signingkey = "/Users/hazed/.ssh/id_ed25519.pub";
       };
+      gpg.format = "ssh";
       commit.gpgsign = true;
 
       alias = {
