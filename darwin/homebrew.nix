@@ -14,7 +14,6 @@
     ];
     casks = [
       "cursor"
-      "zed"
 
       "ghostty"
       "siyuan"

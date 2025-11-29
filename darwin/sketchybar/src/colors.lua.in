@@ -23,6 +23,17 @@ return {
 
   with_alpha = function(color, alpha)
     if alpha > 1.0 or alpha < 0.0 then return color end
-    return (color & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
+
+    local numeric = color
+    if type(numeric) ~= "number" then
+      numeric = tonumber(color)
+    end
+
+    if numeric == nil then return color end
+
+    local masked =
+      (numeric & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
+
+    return string.format("0x%08x", masked)
   end,
 }

@@ -46,7 +46,6 @@ in {
       dc = "docker-compose";
       py = "python";
       zl = "zellij";
-      zed = "^/Applications/Zed.app/Contents/MacOS/cli";
 
       nf = "sudo darwin-rebuild switch --flake ~/nix#air";
       nsh = "nix-shell";

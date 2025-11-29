@@ -6,6 +6,7 @@
     ./modules/prompt/starship.nix
     ./modules/history/atuin.nix
     ./modules/shells/nushell.nix
+    ./modules/apps/zed.nix
   ];
 
   home = {

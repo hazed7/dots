@@ -1,5 +1,8 @@
 { pkgs, ... }: {
-  imports = [ ./homebrew.nix ];
+  imports = [
+    ./homebrew.nix
+    ./sketchybar
+  ];
 
   programs = {
     zsh.enable = true;
@@ -8,10 +11,6 @@
 
   services = {
     karabiner-elements.enable = false;
-    sketchybar = {
-      enable = false;
-      extraPackages = with pkgs; [ jq gh ];
-    };
   };
 
   fonts = {
@@ -53,7 +52,6 @@
       };
 
       NSGlobalDomain = {
-        _HIHideMenuBar = false;
         AppleFontSmoothing = 0;
         AppleInterfaceStyle = "Dark";
         AppleKeyboardUIMode = 3;
