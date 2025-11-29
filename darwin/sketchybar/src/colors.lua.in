@@ -1,0 +1,28 @@
+return {
+  black = @color_black@,
+  white = @color_white@,
+  red = @color_red@,
+  green = @color_green@,
+  blue = @color_blue@,
+  yellow = @color_yellow@,
+  orange = @color_orange@,
+  magenta = @color_magenta@,
+  grey = @color_grey@,
+  transparent = @color_transparent@,
+
+  bar = {
+    bg = @color_bar_bg@,
+    border = @color_bar_border@,
+  },
+  popup = {
+    bg = @color_popup_bg@,
+    border = @color_popup_border@
+  },
+  bg1 = @color_bg1@,
+  bg2 = @color_bg2@,
+
+  with_alpha = function(color, alpha)
+    if alpha > 1.0 or alpha < 0.0 then return color end
+    return (color & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
+  end,
+}

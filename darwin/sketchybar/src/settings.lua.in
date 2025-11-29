@@ -1,0 +1,8 @@
+return {
+  paddings = @paddings@,
+  group_paddings = @group_paddings@,
+
+  icons = "@icon_set@", -- alternatively available: NerdFont
+
+  font = require("@font_module@"),
+}

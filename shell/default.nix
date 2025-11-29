@@ -24,9 +24,6 @@
       docker-compose
       python3 uv
       go golangci-lint
-      (writeShellScriptBin "zed" ''
-        open -a "Zed" --args "$@"
-      '')
     ];
 
     sessionPath = [
@@ -43,6 +40,10 @@
       NIXPKGS_ALLOW_UNFREE = "1";
     };
     file.".hushlogin".text = "";
+    file."Library/Fonts/sketchybar-app-font.ttf".source = pkgs.fetchurl {
+      url = "https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.28/sketchybar-app-font.ttf";
+      sha256 = "1ppis4k4g35gc7zbfhlq9rk4jq92k3c620kw5r666rya38lf77p4";
+    };
 
     shell.enableNushellIntegration = true;
   };
