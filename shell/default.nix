@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   imports = [
     ./modules/vcs/git.nix
     ./modules/cli/zellij.nix
@@ -47,6 +47,18 @@
     };
 
     shell.enableNushellIntegration = true;
+
+    activation.sshAddKeychain =
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        key="$HOME/.ssh/id_ed25519"
+        pub="$key.pub"
+
+        if [ -f "$key" ] && [ -f "$pub" ]; then
+          if ! /usr/bin/ssh-add -L 2>/dev/null | ${pkgs.gnugrep}/bin/grep -Fq "$(cat "$pub")"; then
+            /usr/bin/ssh-add --apple-use-keychain "$key" >/dev/null 2>&1 || true
+          fi
+        fi
+      '';
   };
 
   programs = {
@@ -66,6 +78,18 @@
     direnv = {
       enable = true;
       enableNushellIntegration = true;
+    };
+
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+      matchBlocks."*" = {
+        extraOptions = {
+          UseKeychain = "yes";
+          AddKeysToAgent = "yes";
+        };
+        identityFile = [ "~/.ssh/id_ed25519" ];
+      };
     };
 
     go = {
