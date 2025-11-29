@@ -30,6 +30,7 @@
 
     # --- macOS ---
     macos-option-as-alt = true
+    macos-titlebar-style = hidden
     shell-integration = detect
 
     # --- Theme ---
