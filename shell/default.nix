@@ -24,6 +24,9 @@
       docker-compose
       python3 uv
       go golangci-lint
+      (writeShellScriptBin "zed" ''
+        open -a "Zed" --args "$@"
+      '')
     ];
 
     sessionPath = [
