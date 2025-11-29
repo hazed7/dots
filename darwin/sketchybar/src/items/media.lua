@@ -53,26 +53,44 @@ local media_title = sbar.add("item", {
   },
 })
 
-sbar.add("item", {
+local media_prev = sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.back },
   label = { drawing = false },
-  click_script = "nowplaying-cli previous",
 })
-sbar.add("item", {
+local media_play = sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.play_pause },
   label = { drawing = false },
-  click_script = "nowplaying-cli togglePlayPause",
 })
-sbar.add("item", {
+local media_next = sbar.add("item", {
   position = "popup." .. media_cover.name,
   icon = { string = icons.media.forward },
   label = { drawing = false },
-  click_script = "nowplaying-cli next",
 })
 
 local interrupt = 0
+local current_media_app = nil
+
+local media_actions = {
+  previous = "previous track",
+  play_pause = "playpause",
+  next = "next track",
+}
+
+local function control_media(action)
+  if not current_media_app then return end
+  local script_action = media_actions[action]
+  if not script_action then return end
+
+  local script = string.format(
+    [[osascript -e 'tell application "%s" to %s']],
+    current_media_app,
+    script_action
+  )
+  sbar.exec(script)
+end
+
 local function animate_detail(detail)
   if (not detail) then interrupt = interrupt - 1 end
   if interrupt > 0 and (not detail) then return end
@@ -86,6 +104,7 @@ end
 media_cover:subscribe("media_change", function(env)
   if whitelist[env.INFO.app] then
     local drawing = (env.INFO.state == "playing")
+    current_media_app = env.INFO.app
     media_artist:set({ drawing = drawing, label = env.INFO.artist, })
     media_title:set({ drawing = drawing, label = env.INFO.title, })
     media_cover:set({ drawing = drawing })
@@ -115,4 +134,16 @@ end)
 
 media_title:subscribe("mouse.exited.global", function(env)
   media_cover:set({ popup = { drawing = false }})
+end)
+
+media_prev:subscribe("mouse.clicked", function()
+  control_media("previous")
+end)
+
+media_play:subscribe("mouse.clicked", function()
+  control_media("play_pause")
+end)
+
+media_next:subscribe("mouse.clicked", function()
+  control_media("next")
 end)

@@ -98,7 +98,7 @@ in {
 
     extraPackages = mkOption {
       type = types.listOf types.package;
-      default = with pkgs; [ jq gh switchaudio-osx ];
+      default = with pkgs; [ jq gh switchaudio-osx nowplaying-cli ];
       description = "Packages added to PATH for helper scripts.";
     };
   };
