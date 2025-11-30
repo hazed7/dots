@@ -63,6 +63,7 @@ in {
 
     extraConfig = ''
       let default_paths = [
+        "/opt/homebrew/bin"
         "/run/current-system/sw/bin"
         $"/etc/profiles/per-user/($env.USER)/bin"
         ($env.HOME | path join ".nix-profile/bin")
