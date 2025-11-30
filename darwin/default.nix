@@ -66,6 +66,13 @@
         "com.apple.sound.beep.feedback" = 0;
         "com.apple.trackpad.scaling" = 1.0;
       };
+
+      CustomUserPreferences = {
+        "com.apple.Safari" = {
+          WebGrammarCheckingEnabled = false;
+          WebContinuousSpellCheckingEnabled = false;
+        };
+      };
     };
   };
 }
