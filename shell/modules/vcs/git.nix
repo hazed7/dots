@@ -1,4 +1,15 @@
-{ ... }: {
+{ lib, ... }:
+let
+  mkCommitAlias = type: emoji: ''
+    !f() {
+      case "$1" in
+        *:*) git commit -m "${emoji} ${type}(''${1%%:*}): ''${1#*: }";;
+        *) git commit -m "${emoji} ${type}: $1";;
+      esac;
+    }; f
+  '';
+in
+{
   programs.git = {
     enable = true;
 
@@ -48,16 +59,16 @@
         fe = "fetch";
         gr = "grep -in";
 
-        ri = "rebase - i";
+        ri = "rebase -i";
         rc = "rebase --continue";
 
         # commit aliases
-        feat = ''!f() { case "$1" in *:*) git commit -m "✨ feat(''${1%%:*}): ''${1#*: }";; *) git commit -m "✨ feat: $1";; esac; }; f'';
-        fix = ''!f() { case "$1" in *:*) git commit -m "🐛 fix(''${1%%:*}): ''${1#*: }";; *) git commit -m "🐛 fix: $1";; esac; }; f'';
-        docs = ''!f() { case "$1" in *:*) git commit -m "📚 docs(''${1%%:*}): ''${1#*: }";; *) git commit -m "📚 docs: $1";; esac; }; f'';
-        refactor = ''!f() { case "$1" in *:*) git commit -m "♻️ refactor(''${1%%:*}): ''${1#*: }";; *) git commit -m "♻️ refactor: $1";; esac; }; f'';
-        ci = ''!f() { case "$1" in *:*) git commit -m "👷 ci(''${1%%:*}): ''${1#*: }";; *) git commit -m "👷 ci: $1";; esac; }; f'';
-        chore = ''!f() { case "$1" in *:*) git commit -m "🔧 chore(''${1%%:*}): ''${1#*: }";; *) git commit -m "🔧 chore: $1";; esac; }; f'';
+        feat = mkCommitAlias "feat" "✨";
+        fix = mkCommitAlias "fix" "🐛";
+        docs = mkCommitAlias "docs" "📚";
+        refactor = mkCommitAlias "refactor" "♻️";
+        ci = mkCommitAlias "ci" "👷";
+        chore = mkCommitAlias "chore" "🔧";
       };
 
       init.defaultBranch = "main";
