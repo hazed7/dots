@@ -29,6 +29,7 @@
     ];
     masApps = {
       "wBlock" = 6746388723;
+      "No Translation for YouTube" = 6754244353; # https://github.com/YouG-o/YouTube-No-Translation
     };
     taps = [ ];
   };
