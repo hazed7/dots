@@ -19,9 +19,13 @@
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zed-extensions = {
+      url = "github:DuskSystems/nix-zed-extensions";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, zed-extensions, ... }:
     let
       system = "aarch64-darwin";
       hostname = "air";
@@ -35,6 +39,9 @@
       pkgs = import nixpkgs {
         inherit system;
         config = nixpkgsConfig;
+        overlays = [
+          zed-extensions.overlays.default
+        ];
       };
 
       unstable = import inputs.nixpkgs-unstable { inherit system; };
@@ -62,6 +69,9 @@
           inputs.nix-index-database.darwinModules.nix-index
           ./darwin
           ({ pkgs, inputs, ... }: {
+            nixpkgs.overlays = [
+                zed-extensions.overlays.default
+            ];
             nixpkgs.config = nixpkgsConfig;
 
             system = {
@@ -103,6 +113,10 @@
               extraSpecialArgs = {
                 inherit inputs unstable;
               };
+
+              sharedModules = [
+                inputs.zed-extensions.homeManagerModules.default
+              ];
 
               users.${user} = { ... }: with inputs; {
                 imports = [ ./shell ];

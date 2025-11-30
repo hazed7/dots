@@ -14,6 +14,7 @@ let
       exec "$app_path/Contents/MacOS/cli" "$@"
     '';
   };
+
   settings = {
     icon_theme = "Soft Charmed Icons";
     edit_predictions = {
@@ -50,28 +51,27 @@ let
       ];
     }
   ];
-
-  extensions = [ "nix" "charmed-icons" "oxocarbon" ];
 in {
   home.packages = [ pkgs.zed-editor zedCli ];
+
+  programs.zed-editor-extensions = {
+    enable = true;
+    packages = with pkgs.zed-extensions; [
+      nix
+      charmed-icons
+      oxocarbon
+    ];
+  };
+
+  home.activation.cleanZedConfig =
+    lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+      rm -rf "$HOME/.config/zed"
+      rm -rf "$HOME/Library/Application Support/Zed"
+    '';
 
   home.file.".config/zed/settings.json".text = builtins.toJSON settings;
   home.file.".config/zed/keymap.json".text = builtins.toJSON keymap;
 
-  home.activation.installZedExtensions =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      managed_app="$HOME/Applications/Home Manager Apps/Zed.app"
-      app_path="$managed_app"
-
-      if [ ! -x "$app_path/Contents/MacOS/cli" ]; then
-        app_path="${zedApp}"
-      fi
-
-      cli_path="$app_path/Contents/MacOS/cli"
-
-      for extension in ${lib.concatStringsSep " " extensions}; do
-        "$cli_path" \
-          --install-extension "$extension" >/dev/null 2>&1 || true
-      done
-    '';
+  home.file."Library/Application Support/Zed/settings.json".text = builtins.toJSON settings;
+  home.file."Library/Application Support/Zed/keymap.json".text = builtins.toJSON keymap;
 }
