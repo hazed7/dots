@@ -1,13 +1,6 @@
 { lib, ... }:
 let
-  mkCommitAlias = type: emoji: ''
-    !f() {
-      case "$1" in
-        *:*) git commit -m "${emoji} ${type}(''${1%%:*}): ''${1#*: }";;
-        *) git commit -m "${emoji} ${type}: $1";;
-      esac;
-    }; f
-  '';
+  mkCommitAlias = type: emoji: ''!f() { case "$1" in *:*) git commit -m "${emoji} ${type}(''${1%%:*}): ''${1#*: }";; *) git commit -m "${emoji} ${type}: $1";; esac; }; f'';
 in
 {
   programs.git = {
