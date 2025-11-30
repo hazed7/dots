@@ -27,10 +27,10 @@ in {
       del = "^rm -rf";
 
       # listings with eza
-      ls = "eza --group-directories-first --icons";
-      lsl = "eza -l --group-directories-first --icons";
-      lsa = "eza -a --group-directories-first --icons";
-      lst = "eza --tree --group-directories-first --icons -I .git";
+      ll = "eza -l --group-directories-first --icons";
+      la = "eza -a --group-directories-first --icons";
+      lt = "eza --tree --group-directories-first --icons -I .git";
+      le = "eza --group-directories-first --icons";
 
       # overrides
       cat = "bat";
