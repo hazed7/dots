@@ -10,6 +10,12 @@ let
       lib.removePrefix homePrefix cfgDir
     else
       cfgDir;
+  nuScripts = pkgs.runCommand "nu-scripts" {} ''
+    mkdir -p $out
+    cp ${./helper.nu} $out/helper.nu
+    cp -r ${./helpers} $out/helpers
+  '';
+
 in {
   programs.nushell = {
     enable = true;
@@ -93,5 +99,8 @@ in {
     '';
   };
 
-  home.file."${helperRelDir}/helper.nu".source = ./helper.nu;
+  home.file = {
+    "${helperRelDir}/helper.nu".source = "${nuScripts}/helper.nu";
+    "${helperRelDir}/helpers".source = "${nuScripts}/helpers";
+  };
 }
