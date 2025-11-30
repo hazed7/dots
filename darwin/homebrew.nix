@@ -27,6 +27,9 @@
 
       "pearcleaner"
     ];
+    masApps = {
+      "wBlock" = 6746388723;
+    };
     taps = [ ];
   };
 }
